@@ -62,7 +62,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor channelMotor = null;
     private DcMotor turretMotor = null;
 
-
+    static int servo = 0;
 
     @Override
     public void runOpMode() {
@@ -115,7 +115,6 @@ public class BasicOpMode_Linear extends LinearOpMode {
             boolean channel = gamepad2.left_trigger>0.5;
             boolean channel_reverse = gamepad2.right_trigger>0.5;
             double turret = gamepad2.right_stick_x;
-            boolean servo = false;
 
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -139,9 +138,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
             turretSpeed = turret;
 
             if (gamepad2.dpadRightWasPressed()){
-                servo = !servo;
+                servo = (servo+1)%2;
             }
-            if (servo){
+            if (servo==1){
                 servoPosition=1;
             }else{
                 servoPosition=0;

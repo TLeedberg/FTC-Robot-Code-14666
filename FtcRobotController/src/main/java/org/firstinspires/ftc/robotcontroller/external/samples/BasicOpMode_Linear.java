@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -61,6 +62,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor intakeMotor = null;
     private DcMotor channelMotor = null;
     private DcMotor turretMotor = null;
+    private Servo leftFinger = null;
+    private Servo rightFinger = null;
+
 
     static int servo = 0;
 
@@ -77,6 +81,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
         channelMotor = hardwareMap.get(DcMotor.class, "channel_motor");
         turretMotor = hardwareMap.get(DcMotor.class, "turret_motor");
+        leftFinger = hardwareMap.get(Servo.class, "left_finger");
+        rightFinger = hardwareMap.get(Servo.class, "right_finger");
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -101,7 +107,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             double intakeSpeed;
             double channelSpeed;
             double turretSpeed;
-            double servoPosition;
+            double leftServoPosition;
+            double rightServoPosition;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -141,9 +148,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 servo = (servo+1)%2;
             }
             if (servo==1){
-                servoPosition=1;
+                leftServoPosition=1;
+                rightServoPosition=1;
             }else{
-                servoPosition=0;
+                leftServoPosition=-1;
+                rightServoPosition=-1;
             }
 
             // Tank Mode uses one stick to control each wheel.
@@ -164,7 +173,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             telemetry.addData("Intake speed", intakeSpeed);
             telemetry.addData("Channel speed", channelSpeed);
             telemetry.addData("Turret speed", turretSpeed);
-            telemetry.addData("Servo position", servoPosition);
+            telemetry.addData("Servo positions:", "Left: "+leftServoPosition+" Right: "+rightServoPosition);
             telemetry.update();
         }
     }

@@ -50,14 +50,19 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear OpMode")
-@Disabled
+@TeleOp(name="Robot code new", group="Linear OpMode")
+//@Disabled
 public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private DcMotor intakeMotor = null;
+    private DcMotor channelMotor = null;
+    private DcMotor turretMotor = null;
+
+
 
     @Override
     public void runOpMode() {
@@ -67,14 +72,21 @@ public class BasicOpMode_Linear extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_back_motor");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_back_motor");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+        channelMotor = hardwareMap.get(DcMotor.class, "channel_motor");
+        turretMotor = hardwareMap.get(DcMotor.class, "turret_motor");
+
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        channelMotor.setDirection(DcMotor.Direction.REVERSE);
+        turretMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -86,6 +98,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
+            double intakeSpeed;
+            double channelSpeed;
+            double turretSpeed;
+            double servoPosition;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -94,8 +110,42 @@ public class BasicOpMode_Linear extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
+            boolean intake = gamepad2.dpad_down;
+            boolean intake_reverse = gamepad2.dpad_up;
+            boolean channel = gamepad2.left_trigger>0.5;
+            boolean channel_reverse = gamepad2.right_trigger>0.5;
+            double turret = gamepad2.right_stick_x;
+            boolean servo = false;
+
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
+            if (intake){
+                intakeSpeed = 1;
+            }else if (intake_reverse){
+                intakeSpeed = -1;
+            }else{
+                intakeSpeed = 0;
+            }
+
+            if (channel){
+                channelSpeed = 1;
+            }else if (channel_reverse){
+                channelSpeed = -1;
+            }else{
+                channelSpeed = 0;
+            }
+
+            turretSpeed = turret;
+
+            if (gamepad2.dpadRightWasPressed()){
+                servo = !servo;
+            }
+            if (servo){
+                servoPosition=1;
+            }else{
+                servoPosition=0;
+            }
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -105,10 +155,17 @@ public class BasicOpMode_Linear extends LinearOpMode {
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+            intakeMotor.setPower(intakeSpeed);
+            channelMotor.setPower(channelSpeed);
+            turretMotor.setPower(turretSpeed);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Intake speed", intakeSpeed);
+            telemetry.addData("Channel speed", channelSpeed);
+            telemetry.addData("Turret speed", turretSpeed);
+            telemetry.addData("Servo position", servoPosition);
             telemetry.update();
         }
     }

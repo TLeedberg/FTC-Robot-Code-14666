@@ -88,7 +88,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         leftFinger = hardwareMap.get(Servo.class, "left_finger");
         rightFinger = hardwareMap.get(Servo.class, "right_finger");
         shooterMotorA = hardwareMap.get(DcMotorEx.class, "shooter_motor_a");
-        shooterMotorB = hardwareMap.get(DcMotorEx.class, "shooter_motor_a");
+        shooterMotorB = hardwareMap.get(DcMotorEx.class, "shooter_motor_b");
 
 
 

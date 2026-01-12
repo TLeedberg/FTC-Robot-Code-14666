@@ -100,7 +100,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         channelMotor.setDirection(DcMotor.Direction.REVERSE);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
-        shooterMotorA.setDirection(DcMotorEx.Direction.FORWARD);
+        shooterMotorA.setDirection(DcMotorEx.Direction.REVERSE);
         shooterMotorB.setDirection(DcMotorEx.Direction.REVERSE);
 
         // Wait for the game to start (driver presses START)

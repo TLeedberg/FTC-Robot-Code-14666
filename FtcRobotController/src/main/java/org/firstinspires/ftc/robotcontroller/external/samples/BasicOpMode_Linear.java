@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -64,6 +66,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor turretMotor = null;
     private Servo leftFinger = null;
     private Servo rightFinger = null;
+    private DcMotorEx shooterMotorA;
+    private DcMotorEx shooterMotorB;
 
 
     static int servo = 0;
@@ -83,6 +87,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
         turretMotor = hardwareMap.get(DcMotor.class, "turret_motor");
         leftFinger = hardwareMap.get(Servo.class, "left_finger");
         rightFinger = hardwareMap.get(Servo.class, "right_finger");
+        shooterMotorA = hardwareMap.get(DcMotorEx.class, "shooter_motor_a");
+        shooterMotorB = hardwareMap.get(DcMotorEx.class, "shooter_motor_a");
+
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -93,6 +100,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         channelMotor.setDirection(DcMotor.Direction.REVERSE);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
+        shooterMotorA.setDirection(DcMotorEx.Direction.FORWARD);
+        shooterMotorB.setDirection(DcMotorEx.Direction.REVERSE);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -109,6 +118,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             double turretSpeed;
             double leftServoPosition;
             double rightServoPosition;
+            double shooterSpeed;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -122,6 +132,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             boolean channel = gamepad2.left_trigger>0.5;
             boolean channel_reverse = gamepad2.right_trigger>0.5;
             double turret = gamepad2.right_stick_x;
+            boolean shooter = gamepad2.left_bumper;
 
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -155,6 +166,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 rightServoPosition=-1;
             }
 
+            if (shooter){
+                shooterSpeed = 0.5;
+            }else {
+                shooterSpeed = 0;
+            }
+
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
             // leftPower  = -gamepad1.left_stick_y ;
@@ -166,6 +183,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             intakeMotor.setPower(intakeSpeed);
             channelMotor.setPower(channelSpeed);
             turretMotor.setPower(turretSpeed);
+            shooterMotorA.setPower(shooterSpeed);
+            shooterMotorB.setPower(shooterSpeed);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

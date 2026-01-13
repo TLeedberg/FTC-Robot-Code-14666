@@ -70,7 +70,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotorEx shooterMotorB;
 
 
-    static int servo = 0;
+    static boolean servo;
 
     @Override
     public void runOpMode() {
@@ -156,9 +156,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
             turretSpeed = turret;
 
             if (gamepad2.dpadRightWasPressed()){
-                servo = (servo+1)%2;
+                servo = !servo;
             }
-            if (servo==1){
+            if (servo){
                 leftServoPosition=1;
                 rightServoPosition=1;
             }else{

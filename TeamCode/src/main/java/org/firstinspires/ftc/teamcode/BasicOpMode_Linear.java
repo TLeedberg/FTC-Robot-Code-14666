@@ -162,11 +162,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 servo = !servo;
             }
             if (servo){
-                leftServoPosition=1;
-                rightServoPosition=1;
+                leftServoPosition=0.14;
+                rightServoPosition=0.39;
             }else{
-                leftServoPosition=-1;
-                rightServoPosition=-1;
+                leftServoPosition=0.40;
+                rightServoPosition=0.15;
             }
 
             if (shooterManual){
@@ -194,6 +194,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             intakeMotor.setPower(intakeSpeed);
             channelMotor.setPower(channelSpeed);
             turretMotor.setPower(turretSpeed);
+            rightFinger.setPosition(rightServoPosition);
+            leftFinger.setPosition(leftServoPosition);
             //shooterMotorA.setPower(shooterSpeed);
             //shooterMotorB.setPower(shooterSpeed);
             shooterMotorA.setVelocity((shooterSpeed/60)*28);

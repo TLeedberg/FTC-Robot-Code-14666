@@ -29,12 +29,10 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -132,7 +130,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
             boolean channel = gamepad2.left_trigger>0.5;
             boolean channel_reverse = gamepad2.right_trigger>0.5;
             double turret = gamepad2.right_stick_x;
-            boolean shooter = gamepad2.left_bumper;
+            boolean shooterManual = gamepad2.left_bumper;
+            boolean shooter1 = gamepad2.a;
+            boolean shooter2 = gamepad2.x;
+            boolean shooter3 = gamepad2.y;
+            boolean shooter4 = gamepad2.b;
+
 
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -166,8 +169,20 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 rightServoPosition=-1;
             }
 
-            if (shooter){
-                shooterSpeed = 0.5;
+            if (shooterManual){
+                shooterSpeed = 0.4;
+            }else if (shooter1){
+                //2700
+                shooterSpeed = 0.27;
+            }else if (shooter2){
+                //3000
+                shooterSpeed = 0.3;
+            }else if (shooter3){
+                //3200
+                shooterSpeed = 0.32;
+            }else if (shooter4){
+                //3500
+                shooterSpeed = 0.35;
             }else {
                 shooterSpeed = 0;
             }
@@ -193,6 +208,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             telemetry.addData("Channel speed", channelSpeed);
             telemetry.addData("Turret speed", turretSpeed);
             telemetry.addData("Servo positions:", "Left: "+leftServoPosition+" Right: "+rightServoPosition);
+            telemetry.addData("Shooter speed", shooterSpeed);
             telemetry.update();
         }
     }

@@ -171,19 +171,19 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             if (shooterManual){
                 //4000
-                shooterSpeed = 4000/3;
+                shooterSpeed = 4000;
             }else if (shooter1){
                 //2700
-                shooterSpeed = 2700/3;
+                shooterSpeed = 2700;
             }else if (shooter2){
                 //3000
-                shooterSpeed = 3000/3;
+                shooterSpeed = 3000;
             }else if (shooter3){
                 //3200
-                shooterSpeed = 3200/3;
+                shooterSpeed = 3200;
             }else if (shooter4){
                 //3500
-                shooterSpeed = 3500/3;
+                shooterSpeed = 3500;
             }else {
                 shooterSpeed = 0;
             }
@@ -201,8 +201,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             turretMotor.setPower(turretSpeed);
             //shooterMotorA.setPower(shooterSpeed);
             //shooterMotorB.setPower(shooterSpeed);
-            shooterMotorA.setVelocity(shooterSpeed);
-            shooterMotorB.setVelocity(shooterSpeed);
+            shooterMotorA.setVelocity(shooterSpeed/3);
+            shooterMotorB.setVelocity(shooterSpeed/3);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

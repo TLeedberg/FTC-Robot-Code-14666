@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -170,19 +170,20 @@ public class BasicOpMode_Linear extends LinearOpMode {
             }
 
             if (shooterManual){
-                shooterSpeed = 0.4;
+                //4000
+                shooterSpeed = 4000/3;
             }else if (shooter1){
                 //2700
-                shooterSpeed = 0.27;
+                shooterSpeed = 2700/3;
             }else if (shooter2){
                 //3000
-                shooterSpeed = 0.3;
+                shooterSpeed = 3000/3;
             }else if (shooter3){
                 //3200
-                shooterSpeed = 0.32;
+                shooterSpeed = 3200/3;
             }else if (shooter4){
                 //3500
-                shooterSpeed = 0.35;
+                shooterSpeed = 3500/3;
             }else {
                 shooterSpeed = 0;
             }
@@ -198,8 +199,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
             intakeMotor.setPower(intakeSpeed);
             channelMotor.setPower(channelSpeed);
             turretMotor.setPower(turretSpeed);
-            shooterMotorA.setPower(shooterSpeed);
-            shooterMotorB.setPower(shooterSpeed);
+            //shooterMotorA.setPower(shooterSpeed);
+            //shooterMotorB.setPower(shooterSpeed);
+            shooterMotorA.setVelocity(shooterSpeed);
+            shooterMotorB.setVelocity(shooterSpeed);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

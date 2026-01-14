@@ -201,8 +201,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             turretMotor.setPower(turretSpeed);
             //shooterMotorA.setPower(shooterSpeed);
             //shooterMotorB.setPower(shooterSpeed);
-            shooterMotorA.setVelocity(shooterSpeed/3);
-            shooterMotorB.setVelocity(shooterSpeed/3);
+            shooterMotorA.setVelocity((shooterSpeed/60)*28);
+            shooterMotorB.setVelocity((shooterSpeed/60)*28);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

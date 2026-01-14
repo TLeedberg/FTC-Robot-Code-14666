@@ -51,9 +51,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Robot code new", group="Linear OpMode")
+@TeleOp(name="Robot code even newer", group="Linear OpMode")
 //@Disabled
-public class BasicOpMode_Linear extends LinearOpMode {
+public class BasicOpMode_Linear_Speed extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -69,6 +69,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
 
     static boolean servo;
+    static double shooterSpeed;
 
     @Override
     public void runOpMode() {
@@ -116,8 +117,6 @@ public class BasicOpMode_Linear extends LinearOpMode {
             double turretSpeed;
             double leftServoPosition;
             double rightServoPosition;
-            double shooterSpeed;
-
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
@@ -130,11 +129,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
             boolean channel = gamepad2.left_trigger>0.5;
             boolean channel_reverse = gamepad2.right_trigger>0.5;
             double turret = gamepad2.right_stick_x;
-            boolean shooterManual = gamepad2.left_bumper;
-            boolean shooter1 = gamepad2.a;
-            boolean shooter2 = gamepad2.x;
-            boolean shooter3 = gamepad2.y;
-            boolean shooter4 = gamepad2.b;
+            boolean shooterAdd = gamepad2.leftBumperWasPressed();
+            boolean shooterSubtract = gamepad2.leftBumperWasPressed();
+            boolean shooter1 = gamepad2.aWasPressed();
+            boolean shooter2 = gamepad2.xWasPressed();
+            boolean shooter3 = gamepad2.yWasPressed();
+            boolean shooter4 = gamepad2.bWasPressed();
 
 
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
@@ -169,8 +169,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 rightServoPosition=-1;
             }
 
-            if (shooterManual){
-                shooterSpeed = 4000;
+            if (shooterAdd) {
+                shooterSpeed += 100;
+            }else if (shooterSubtract){
+                shooterSpeed -= 100;
             }else if (shooter1){
                 shooterSpeed = 2400;
             }else if (shooter2){

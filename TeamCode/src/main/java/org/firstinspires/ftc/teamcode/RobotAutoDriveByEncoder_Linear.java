@@ -27,12 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -61,13 +62,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
-@Disabled
+@Autonomous(name="New auto", group="Robot")
+//@Disabled
 public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private DcMotor         leftDrive   = null;
-    private DcMotor         rightDrive  = null;
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
+    private DcMotor intakeMotor = null;
+    private DcMotor channelMotor = null;
+    private DcMotor turretMotor = null;
+    private Servo leftFinger = null;
+    private Servo rightFinger = null;
+    private DcMotorEx shooterMotorA = null;
+    private DcMotorEx shooterMotorB = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -77,7 +85,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 560 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -89,20 +97,43 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_back_motor");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_back_motor");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+        channelMotor = hardwareMap.get(DcMotor.class, "channel_motor");
+        turretMotor = hardwareMap.get(DcMotor.class, "turret_motor");
+        leftFinger = hardwareMap.get(Servo.class, "left_finger");
+        rightFinger = hardwareMap.get(Servo.class, "right_finger");
+        shooterMotorA = hardwareMap.get(DcMotorEx.class, "shooter_motor_a");
+        shooterMotorB = hardwareMap.get(DcMotorEx.class, "shooter_motor_b");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        channelMotor.setDirection(DcMotor.Direction.REVERSE);
+        turretMotor.setDirection(DcMotor.Direction.REVERSE);
+        shooterMotorA.setDirection(DcMotorEx.Direction.REVERSE);
+        shooterMotorB.setDirection(DcMotorEx.Direction.REVERSE);
+
 
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        channelMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotorA.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotorB.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        channelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorA.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        shooterMotorB.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
@@ -115,9 +146,13 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        servoDown();
+        intakeStart();
+        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -40, -40, 6.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        intakeStop();
+        shooterAuto(2400,4, 3);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -183,5 +218,37 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
             sleep(250);   // optional pause after each move.
         }
+    }
+
+    public void shooterAuto(double rpm, long upTime, long fireTime){
+        shooterMotorA.setVelocity((rpm/60)*28);
+        shooterMotorB.setVelocity((rpm/60)*28);
+        sleep(upTime*1000);
+        servoUp();
+        channelMotor.setPower(1);
+        intakeStart();
+        sleep(fireTime*1000);
+        servoDown();
+        channelMotor.setPower(0);
+        intakeStop();
+        shooterMotorA.setVelocity(0);
+        shooterMotorB.setVelocity(0);
+    }
+
+    public void intakeStart(){
+        intakeMotor.setPower(1);
+    }
+
+    public void intakeStop(){
+        intakeMotor.setPower(0);
+    }
+    public void servoUp(){
+        rightFinger.setPosition(0.15);
+        leftFinger.setPosition(0.40);
+    }
+
+    public void servoDown(){
+        rightFinger.setPosition(0.39);
+        leftFinger.setPosition(0.14);
     }
 }

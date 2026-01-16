@@ -64,8 +64,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor turretMotor = null;
     private Servo leftFinger = null;
     private Servo rightFinger = null;
-    private DcMotorEx shooterMotorA;
-    private DcMotorEx shooterMotorB;
+    private DcMotorEx shooterMotorA = null;
+    private DcMotorEx shooterMotorB = null;
 
 
     static boolean servo;
@@ -129,7 +129,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             boolean intake_reverse = gamepad2.dpad_up;
             boolean channel = gamepad2.left_trigger>0.5;
             boolean channel_reverse = gamepad2.right_trigger>0.5;
-            double turret = gamepad2.right_stick_x;
+            //double turret = gamepad2.right_stick_x;
+            double turret = (gamepad1.dpad_right ? 1:0) - (gamepad1.dpad_left ? 1:0);
             boolean shooterManual = gamepad2.left_bumper;
             boolean shooter1 = gamepad2.a;
             boolean shooter2 = gamepad2.x;
@@ -156,9 +157,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 channelSpeed = 0;
             }
 
-            turretSpeed = turret;
+            turretSpeed = turret * 0.8;
 
-            if (gamepad2.dpadRightWasPressed()){
+            if (gamepad2.rightBumperWasPressed()){
                 servo = !servo;
             }
             if (servo){

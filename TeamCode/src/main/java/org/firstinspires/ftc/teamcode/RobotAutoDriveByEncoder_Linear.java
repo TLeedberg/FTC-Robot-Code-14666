@@ -146,13 +146,29 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        turretMotor.setPower(-1);
+        sleep(500);
+        turretMotor.setPower(0);
+
         servoDown();
         intakeStart();
         //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -40, -40, 6.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         intakeStop();
-        shooterAuto(2400,4, 3);
+        shooterAuto(2550,5, 4);
+        encoderDrive(TURN_SPEED, 3.5, -3.5, 4);
+        intakeStart();
+        encoderDrive(DRIVE_SPEED, 40, 40, 4);
+        encoderDrive(DRIVE_SPEED, -40, -40, 4);
+        encoderDrive(TURN_SPEED, -5, 5, 4);
+
+        turretMotor.setPower(1);
+        sleep(500);
+        turretMotor.setPower(0);
+
+        intakeStop();
+        shooterAuto(2550,5, 4);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -225,7 +241,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         shooterMotorB.setVelocity((rpm/60)*28);
         sleep(upTime*1000);
         servoUp();
-        channelMotor.setPower(1);
+        channelMotor.setPower(0.5);
         intakeStart();
         sleep(fireTime*1000);
         servoDown();

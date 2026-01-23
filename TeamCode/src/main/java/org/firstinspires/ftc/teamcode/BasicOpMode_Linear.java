@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//pull request test
+//test
 
 package org.firstinspires.ftc.teamcode;
 

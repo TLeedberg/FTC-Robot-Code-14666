@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,8 +68,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotorEx leftDrive = null;
+    private DcMotorEx rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor channelMotor = null;
     private DcMotor turretMotor = null;
@@ -97,8 +98,8 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_back_motor");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_back_motor");
+        leftDrive  = hardwareMap.get(DcMotorEx.class, "left_back_motor");
+        rightDrive = hardwareMap.get(DcMotorEx.class, "right_back_motor");
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
         channelMotor = hardwareMap.get(DcMotor.class, "channel_motor");
         turretMotor = hardwareMap.get(DcMotor.class, "turret_motor");
@@ -110,25 +111,25 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        rightDrive.setDirection(DcMotorEx.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         channelMotor.setDirection(DcMotor.Direction.REVERSE);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
-        shooterMotorA.setDirection(DcMotorEx.Direction.REVERSE);
+        shooterMotorA.setDirection(DcMotorEx.Direction.FORWARD);
         shooterMotorB.setDirection(DcMotorEx.Direction.REVERSE);
 
 
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         channelMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotorA.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotorB.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         channelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -199,13 +200,20 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             rightDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            rightDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            leftDrive.setPower(Math.abs(speed));
-            rightDrive.setPower(Math.abs(speed));
+            //leftDrive.setPower(Math.abs(speed));
+            //rightDrive.setPower(Math.abs(speed));
+
+            PIDFCoefficients pidfCoefficientsL = new PIDFCoefficients(21, 0, 0, 14);
+            PIDFCoefficients pidfCoefficientsR = new PIDFCoefficients(16.5, 0, 0, 13);
+
+            leftDrive.setVelocity(1100);
+            rightDrive.setVelocity(1100);
+
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits

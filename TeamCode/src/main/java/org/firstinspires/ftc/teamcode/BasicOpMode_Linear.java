@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -98,8 +99,13 @@ public class BasicOpMode_Linear extends LinearOpMode {
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         channelMotor.setDirection(DcMotor.Direction.REVERSE);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
-        shooterMotorA.setDirection(DcMotorEx.Direction.REVERSE);
+        shooterMotorA.setDirection(DcMotorEx.Direction.FORWARD);
         shooterMotorB.setDirection(DcMotorEx.Direction.REVERSE);
+
+
+        PIDFCoefficients pidCoefficients = new PIDFCoefficients(300, 0, 0, 15);
+        shooterMotorA.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
+        shooterMotorB.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -166,20 +172,20 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 leftServoPosition=0.14;
                 rightServoPosition=0.39;
             }else{
-                leftServoPosition=0.40;
-                rightServoPosition=0.15;
+                leftServoPosition=0.42; //40
+                rightServoPosition=0.13; //15
             }
 
             if (shooterManual){
-                shooterSpeed = 4000;
-            }else if (shooter1){
-                shooterSpeed = 2400;
-            }else if (shooter2){
-                shooterSpeed = 2700;
-            }else if (shooter3){
-                shooterSpeed = 3000;
-            }else if (shooter4){
                 shooterSpeed = 3300;
+            }else if (shooter1){
+                shooterSpeed = 2100;
+            }else if (shooter2){
+                shooterSpeed = 2400;
+            }else if (shooter3){
+                shooterSpeed = 2700;
+            }else if (shooter4){
+                shooterSpeed = 3000;
             }else {
                 shooterSpeed = 0;
             }
@@ -197,8 +203,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
             turretMotor.setPower(turretSpeed);
             rightFinger.setPosition(rightServoPosition);
             leftFinger.setPosition(leftServoPosition);
-            //shooterMotorA.setPower(shooterSpeed);
-            //shooterMotorB.setPower(shooterSpeed);
+
+            shooterMotorA.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
+            shooterMotorB.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
+
             shooterMotorA.setVelocity((shooterSpeed/60)*28);
             shooterMotorB.setVelocity((shooterSpeed/60)*28);
 

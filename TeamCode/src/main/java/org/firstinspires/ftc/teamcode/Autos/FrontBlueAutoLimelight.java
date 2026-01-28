@@ -86,6 +86,7 @@ public class FrontBlueAutoLimelight extends LinearOpMode {
         shooterMotorA = hardwareMap.get(DcMotorEx.class, "shooter_motor_a");
         shooterMotorB = hardwareMap.get(DcMotorEx.class, "shooter_motor_b");
         limeLight = hardwareMap.get(Limelight3A.class, "Limelight2");
+        limeLight.pipelineSwitch(0);
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.

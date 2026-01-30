@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -38,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="front blue limelight", group="Robot")
-//@Disabled
+@Disabled
 public class FrontBlueAutoLimelight extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="front red", group="Robot")
+@Autonomous(name="Front Red", group="Robot")
 //@Disabled
 public class FrontRedAuto extends LinearOpMode {
 
@@ -172,11 +172,11 @@ public class FrontRedAuto extends LinearOpMode {
         intakeStop();
         shooterAuto(2450,2, 3);
 
-        encoderDrive(TURN_SPEED, 6.75, -6.75, 4);
+        encoderDrive(TURN_SPEED, 6.3, -6.3, 4);
         intakeStart();
         encoderDrive(DRIVE_SPEED, 40, 40, 4);
         encoderDrive(DRIVE_SPEED, -40, -40, 4);
-        encoderDrive(TURN_SPEED, -7, 7, 4);
+        encoderDrive(TURN_SPEED, -6.85, 6.85, 4);
         shooterAuto(2450,2, 3);
 
 
